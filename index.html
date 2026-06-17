@@ -1,0 +1,1073 @@
+<!DOCTYPE html>
+<html lang="ms">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Expense Tracker</title>
+  <link rel="stylesheet" href="style.css">
+  <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
+  </head>
+  <body>
+    <!-- Mobile Menu Button -->
+    <button class="hamburger-menu" id="hamburgerMenu" aria-label="Toggle menu">
+      <span></span>
+      <span></span>
+      <span></span>
+    </button>
+    <div class="mobile-overlay" id="mobileOverlay"></div>
+
+    <!-- App Layout -->
+    <div class="app-layout">
+    <aside class="sidebar">
+      <div class="sidebar-header">
+        <div class="logo">
+          <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M12 2v20M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"/>
+          </svg>
+        </div>
+        <div class="sidebar-brand">
+          <h1>Expense Tracker</h1>
+          <p class="tagline">Monitor dengan bijak</p>
+        </div>
+      </div>
+
+      <nav class="sidebar-nav">
+        <button class="tab-btn active" data-tab="dashboard">
+          <span class="tab-icon">📊</span>
+          <span>Dashboard</span>
+        </button>
+        <button class="tab-btn" data-tab="transactions">
+          <span class="tab-icon">💸</span>
+          <span>Transaksi & Akaun</span>
+        </button>
+        <button class="tab-btn" data-tab="loans">
+          <span class="tab-icon">🏦</span>
+          <span>Loan</span>
+        </button>
+        <button class="tab-btn" data-tab="payslip">
+          <span class="tab-icon">💰</span>
+          <span>Slip Gaji</span>
+        </button>
+        <button class="tab-btn" data-tab="insights">
+          <span class="tab-icon">📈</span>
+          <span>Insights</span>
+        </button>
+        <button class="tab-btn" data-tab="recurring">
+          <span class="tab-icon">🔄</span>
+          <span>Recurring</span>
+        </button>
+        <button class="tab-btn" data-tab="budget">
+          <span class="tab-icon">📋</span>
+          <span>Budget</span>
+        </button>
+        <button class="tab-btn" data-tab="calculator">
+          <span class="tab-icon">🧮</span>
+          <span>Calculator</span>
+        </button>
+        <button class="tab-btn" data-tab="reporting">
+          <span class="tab-icon">📑</span>
+          <span>Reporting</span>
+        </button>
+      </nav>
+
+      <div class="sidebar-footer">
+        <button class="icon-btn" id="btn-import" title="Import CSV">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="17 8 12 3 7 8"/><line x1="12" y1="3" x2="12" y2="15"/>
+          </svg>
+        </button>
+        <button class="icon-btn" id="btn-settings" title="Settings">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1 0 2.83 2 2 0 0 1-2.83 0l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-2 2 2 2 0 0 1-2-2v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83 0 2 2 0 0 1 0-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1-2-2 2 2 0 0 1 2-2h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 0-2.83 2 2 0 0 1 2.83 0l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 2-2 2 2 0 0 1 2 2v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 0 2 2 0 0 1 0 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 2 2 2 2 0 0 1-2 2h-.09a1.65 1.65 0 0 0-1.51 1z"/>
+          </svg>
+        </button>
+      </div>
+    </aside>
+
+    <main class="main-content">
+      <section class="tab-content active" id="tab-dashboard">
+      <div class="summary-stack">
+        <div class="summary-card card-balance">
+          <span class="summary-label">Baki Bulan Ini</span>
+          <span class="summary-value" id="val-balance">RM 0.00</span>
+          <div class="summary-meta">
+            <span class="meta-income" id="val-income-sm">+ RM 0</span>
+            <span class="meta-divider">/</span>
+            <span class="meta-expense" id="val-expense-sm">- RM 0</span>
+          </div>
+        </div>
+
+        <div class="summary-row">
+          <div class="summary-card card-income">
+            <span class="summary-label">Pendapatan (Gaji)</span>
+            <span class="summary-value" id="val-income">RM 0.00</span>
+          </div>
+          <div class="summary-card card-expense">
+            <span class="summary-label">Perbelanjaan</span>
+            <span class="summary-value" id="val-expense">RM 0.00</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="budget-alert" id="budget-alert-section" style="display:none;">
+        <div class="alert-container" id="alert-container"></div>
+      </div>
+
+      <div class="card chart-card">
+        <div class="card-head">
+          <h2>Perbelanjaan Mengikut Kategori</h2>
+          <select id="chart-month" class="select-compact"></select>
+        </div>
+        <div class="chart-wrap">
+          <canvas id="category-chart"></canvas>
+          <p id="chart-empty" class="empty-state" style="display:none;">Tiada data perbelanjaan untuk bulan ini.</p>
+        </div>
+      </div>
+
+      <div class="card chart-card">
+        <div class="card-head">
+          <h2>Trend 6 Bulan</h2>
+        </div>
+        <div class="chart-wrap">
+          <canvas id="trend-chart"></canvas>
+        </div>
+      </div>
+
+      <div class="card">
+        <div class="card-head">
+          <h2>Transaksi Terkini</h2>
+          <button class="link-btn" onclick="switchTab('transactions')">Lihat semua</button>
+        </div>
+        <ul class="tx-list" id="recent-tx-list"></ul>
+        <p id="recent-empty" class="empty-state">Tiada transaksi lagi. Tambah transaksi pertama anda!</p>
+      </div>
+    </section>
+
+    <section class="tab-content" id="tab-transactions">
+      <div class="card">
+        <div class="card-head">
+          <h2>Akaun</h2>
+          <div class="accounts-add-buttons">
+            <button class="btn btn-sm btn-primary" onclick="showAddAccountModal('bank')" title="Tambah Bank">🏦 Bank</button>
+            <button class="btn btn-sm btn-primary" onclick="showAddAccountModal('creditcard')" title="Tambah Credit Card">💳 CC</button>
+            <button class="btn btn-sm btn-primary" onclick="showAddAccountModal('ewallet')" title="Tambah E-Wallet">📱 E-Wallet</button>
+          </div>
+        </div>
+        <div id="all-accounts-list" class="accounts-list-grid">
+          <div class="account-item account-item-compact">
+            <div class="account-info">
+              <span class="account-icon">💵</span>
+              <div class="account-details">
+                <div class="account-name">Tunai</div>
+                <div class="account-balance"><strong id="cash-balance">RM 0.00</strong></div>
+              </div>
+            </div>
+            <button class="action-btn" onclick="editAccount('cash')" title="Edit">✏️</button>
+          </div>
+        </div>
+      </div>
+
+      <div class="card">
+        <h2 id="form-title">Tambah Transaksi</h2>
+        <form id="expense-form">
+          <input type="hidden" id="edit-row-id" value="">
+          <div class="form-row">
+            <div class="form-group">
+              <label for="input-date">Tarikh</label>
+              <input type="date" id="input-date" required>
+            </div>
+            <div class="form-group">
+              <label for="input-type">Jenis</label>
+              <select id="input-type" required>
+                <option value="expense">Perbelanjaan</option>
+                <option value="topup">Topup/Pindahan Masuk</option>
+              </select>
+            </div>
+          </div>
+          <div class="form-row">
+            <div class="form-group">
+              <label for="input-amount">Jumlah (RM)</label>
+              <input type="text" id="input-amount" inputmode="numeric" min="0" placeholder="0.00" required>
+            </div>
+            <div class="form-group">
+              <label for="input-account">Akaun</label>
+              <select id="input-account"></select>
+            </div>
+          </div>
+          <div class="form-group">
+            <label for="input-category">Kategori</label>
+            <select id="input-category"></select>
+          </div>
+          <div class="form-group">
+            <label for="input-description">Catatan <span class="hint-ai" id="ai-suggest"></span></label>
+            <input type="text" id="input-description" placeholder="Contoh: Makan tengahari, Grab ke office...">
+          </div>
+          <div class="form-actions">
+            <button type="submit" class="btn btn-primary" id="btn-submit">Simpan</button>
+            <button type="button" class="btn btn-ghost" id="btn-cancel" style="display:none;">Batal</button>
+          </div>
+        </form>
+      </div>
+
+      <div class="card">
+        <div class="card-head">
+          <h2>Sejarah Transaksi</h2>
+        </div>
+        <div class="filter-bar">
+          <select id="filter-type" class="select-compact">
+            <option value="all">Semua Jenis</option>
+            <option value="expense">Perbelanjaan</option>
+            <option value="topup">Topup/Pindahan Masuk</option>
+          </select>
+          <select id="filter-category" class="select-compact">
+            <option value="all">Semua Kategori</option>
+          </select>
+          <input type="month" id="filter-month" class="select-compact">
+        </div>
+        <div class="table-wrap">
+          <table>
+            <thead>
+              <tr>
+                <th>Tarikh</th>
+                <th>Kategori</th>
+                <th>Jumlah</th>
+                <th></th>
+              </tr>
+            </thead>
+            <tbody id="transaction-body"></tbody>
+          </table>
+        </div>
+        <p id="no-data-msg" class="empty-state" style="display:none;">Tiada rekod dijumpai.</p>
+      </div>
+    </section>
+
+    <section class="tab-content" id="tab-loans">
+      <div class="card">
+        <div class="card-head">
+          <h2>Ringkasan Loan</h2>
+          <button class="btn btn-sm btn-primary" id="btn-add-loan">+ Tambah Loan</button>
+        </div>
+        <div class="summary-row">
+          <div class="summary-card">
+            <span class="summary-label">Jumlah Loan</span>
+            <span class="summary-value" id="total-loan-amount">RM 0.00</span>
+          </div>
+          <div class="summary-card">
+            <span class="summary-label">Baki</span>
+            <span class="summary-value" id="total-loan-balance">RM 0.00</span>
+          </div>
+          <div class="summary-card">
+            <span class="summary-label">Monthly</span>
+            <span class="summary-value" id="total-loan-monthly">RM 0.00</span>
+          </div>
+        </div>
+      </div>
+
+      <div id="loan-list" class="loan-list"></div>
+      <p id="loan-empty" class="empty-state">Tiada loan ditambah lagi.</p>
+
+      <div id="loan-insights-container" style="display:none; margin-top: 1.5rem;">
+        <div class="card">
+          <div class="card-head">
+            <h2>💡 Insights & Analisis</h2>
+          </div>
+          <div id="loan-insights-content"></div>
+        </div>
+
+        <div class="card" style="margin-top: 1rem;">
+          <div class="card-head">
+            <h2>🎯 Strategi Penyelesaian</h2>
+          </div>
+          <div id="loan-strategy-content"></div>
+        </div>
+
+        <div class="card" style="margin-top: 1rem;">
+          <div class="card-head">
+            <h2>⚡ Simulator Pembayaran Ekstra</h2>
+          </div>
+          <div id="loan-simulator-content">
+            <p class="sub-text">Cuba tambah bayaran ekstra bulanan untuk lihat berapa cepat boleh habis loan!</p>
+            <div style="margin-bottom: 1rem;">
+              <label style="display: block; margin-bottom: 0.5rem; font-weight: 600;">Bayaran Ekstra Sebulan (RM):</label>
+              <input type="number" id="extra-payment-input" min="0" step="50" value="100" style="width: 150px; padding: 0.5rem; border: 1px solid var(--border); border-radius: 4px;">
+              <button class="btn btn-primary btn-sm" onclick="simulateExtraPayment()" style="margin-left: 0.5rem;">Kira</button>
+            </div>
+            <div id="simulation-result"></div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="tab-content" id="tab-payslip">
+      <div class="card">
+        <div class="card-head">
+          <h2>Slip Gaji</h2>
+          <button class="btn btn-sm btn-primary" id="btn-upload-payslip">Upload Slip</button>
+        </div>
+        <p class="sub-text">Muat naik dan simpan slip gaji anda untuk rekod. Data pra-muat dari 17 slip gaji (Jan 2025 - Mei 2026).</p>
+      </div>
+
+      <div class="salary-summary-grid">
+        <div class="summary-card salary-card-primary">
+          <span class="summary-label">Nett Pay Terkini (Mei 2026)</span>
+          <span class="summary-value" id="payslip-nett">RM 3,912.71</span>
+          <span class="summary-sub">Masuk bank selepas semua potongan</span>
+        </div>
+        <div class="summary-card">
+          <span class="summary-label">Gaji Pokok (Terkini)</span>
+          <span class="summary-value" id="payslip-salary">RM 5,019.00</span>
+          <span class="summary-sub">Naik RM 285 (6%) sejak Mei 2025</span>
+        </div>
+        <div class="summary-card">
+          <span class="summary-label">Purata Earnings</span>
+          <span class="summary-value" id="payslip-avg-earnings">RM 5,526.23</span>
+          <span class="summary-sub">17 bulan</span>
+        </div>
+        <div class="summary-card">
+          <span class="summary-label">Total EPF (+ Employer)</span>
+          <span class="summary-value" id="payslip-total-epf">RM 21,012.00</span>
+          <span class="summary-sub">Jan 2025 - Mei 2026</span>
+        </div>
+      </div>
+
+      <div class="card">
+        <div class="card-head">
+          <h2>Trend Pendapatan Bulanan</h2>
+        </div>
+        <div class="chart-wrap chart-wrap-lg">
+          <canvas id="salary-chart"></canvas>
+        </div>
+      </div>
+
+      <div class="card">
+        <div class="card-head">
+          <h2>Pecahan Potongan (17 Bulan)</h2>
+        </div>
+        <div class="deduction-grid">
+          <div class="chart-wrap">
+            <canvas id="deduction-chart"></canvas>
+          </div>
+          <div class="deduction-list" id="deduction-list"></div>
+        </div>
+      </div>
+
+      <div class="card">
+        <div class="card-head">
+          <h2>Senarai Slip Gaji</h2>
+        </div>
+        <ul class="payslip-list" id="payslip-list"></ul>
+        <p id="payslip-empty" class="empty-state" style="display:none;">Belum ada slip gaji diupload.</p>
+      </div>
+    </section>
+
+    <section class="tab-content" id="tab-insights">
+      <div class="card">
+        <div class="card-head">
+          <h2>Perbandingan Bulan Ini vs Bulan Lepas</h2>
+        </div>
+        <div id="comparison-view"></div>
+      </div>
+
+      <div class="card">
+        <div class="card-head">
+          <h2>Trend Perbelanjaan 6 Bulan</h2>
+        </div>
+        <div class="chart-wrap chart-wrap-lg">
+          <canvas id="insight-trend-chart"></canvas>
+        </div>
+      </div>
+
+      <div class="card">
+        <div class="card-head">
+          <h2>Top 5 Kategori</h2>
+        </div>
+        <div id="top-categories-view"></div>
+      </div>
+
+      <div class="card">
+        <div class="card-head">
+          <h2>Analisis & Cadangan</h2>
+        </div>
+        <ul id="insight-tips" class="insight-list"></ul>
+      </div>
+    </section>
+
+    <section class="tab-content" id="tab-recurring">
+      <div id="recurring-alerts"></div>
+
+      <div class="card">
+        <div class="card-head">
+          <h2>Langganan & Bil Bulanan</h2>
+          <button class="btn btn-sm btn-primary" id="btn-add-recurring">+ Tambah</button>
+        </div>
+        <p class="sub-text">Semak status bayaran setiap bulan. Mark ✔ bila dah bayar untuk elak penalty atau disconnection.</p>
+
+        <div class="recurring-status-bar">
+          <div class="summary-card recurring-stat-paid">
+            <span class="summary-label">Sudah Dibayar</span>
+            <span class="summary-value" id="recurring-paid-count">0 / 0</span>
+            <span class="summary-sub" id="recurring-paid-amount">RM 0.00</span>
+          </div>
+          <div class="summary-card recurring-stat-outstanding">
+            <span class="summary-label">Belum Dibayar</span>
+            <span class="summary-value" id="recurring-outstanding-count">0</span>
+            <span class="summary-sub" id="recurring-outstanding-amount">RM 0.00</span>
+          </div>
+          <div class="summary-card">
+            <span class="summary-label">Jumlah Komitmen</span>
+            <span class="summary-value" id="recurring-total">RM 0.00</span>
+            <span class="summary-sub" id="recurring-month-label"></span>
+          </div>
+        </div>
+
+        <ul class="recurring-list" id="recurring-list"></ul>
+        <p id="recurring-empty" class="empty-state">Tiada recurring item. Klik "+ Tambah" untuk mulakan.</p>
+      </div>
+    </section>
+
+    <section class="tab-content" id="tab-budget">
+      <div class="card">
+        <div class="card-head">
+          <h2>Budget Bulanan</h2>
+          <span class="sub-text" id="budget-month-label"></span>
+        </div>
+        <div class="budget-total-bar" id="budget-total-bar"></div>
+        <div id="budget-list"></div>
+        <p id="budget-empty-msg" class="empty-state">Tiada budget ditetapkan. Klik ikon gear di header untuk mula tetapkan budget.</p>
+      </div>
+    </section>
+
+    <section class="tab-content" id="tab-calculator">
+      <div class="card">
+        <div class="card-head">
+          <h2>🧮 Calculator Tools</h2>
+        </div>
+        <p class="sub-text">Bantuan pengiraan untuk pengurusan kewangan anda</p>
+      </div>
+
+      <!-- Basic Calculator -->
+      <div class="card">
+        <h3 class="section-title">Basic Calculator</h3>
+        <div class="calculator-container">
+          <input type="text" id="basic-calc-display" class="calc-display" readonly placeholder="0">
+          <div class="calc-buttons">
+            <button class="calc-btn calc-clear" onclick="basicCalcClear()">C</button>
+            <button class="calc-btn calc-backspace" onclick="basicCalcBackspace()">⌫</button>
+            <button class="calc-btn calc-operator" onclick="basicCalcAppend('%')">%</button>
+            <button class="calc-btn calc-operator" onclick="basicCalcAppend('/')">÷</button>
+            <button class="calc-btn" onclick="basicCalcAppend('7')">7</button>
+            <button class="calc-btn" onclick="basicCalcAppend('8')">8</button>
+            <button class="calc-btn" onclick="basicCalcAppend('9')">9</button>
+            <button class="calc-btn calc-operator" onclick="basicCalcAppend('*')">×</button>
+            <button class="calc-btn" onclick="basicCalcAppend('4')">4</button>
+            <button class="calc-btn" onclick="basicCalcAppend('5')">5</button>
+            <button class="calc-btn" onclick="basicCalcAppend('6')">6</button>
+            <button class="calc-btn calc-operator" onclick="basicCalcAppend('-')">−</button>
+            <button class="calc-btn" onclick="basicCalcAppend('1')">1</button>
+            <button class="calc-btn" onclick="basicCalcAppend('2')">2</button>
+            <button class="calc-btn" onclick="basicCalcAppend('3')">3</button>
+            <button class="calc-btn calc-operator" onclick="basicCalcAppend('+')">+</button>
+            <button class="calc-btn calc-zero" onclick="basicCalcAppend('0')">0</button>
+            <button class="calc-btn" onclick="basicCalcAppend('.')">.</button>
+            <button class="calc-btn calc-equals" onclick="basicCalcEquals()">=</button>
+          </div>
+        </div>
+      </div>
+
+      <!-- Bill Splitter -->
+      <div class="card">
+        <h3 class="section-title">Bill Splitter</h3>
+        <p class="sub-text">Bahagikan bil dengan rakan</p>
+        <div class="form-row">
+          <div class="form-group">
+            <label>Jumlah Bil (RM)</label>
+            <input type="number" id="bill-amount" step="0.01" placeholder="100.00">
+          </div>
+          <div class="form-group">
+            <label>Bilangan Orang</label>
+            <input type="number" id="bill-people" min="1" placeholder="4">
+          </div>
+        </div>
+        <div class="form-row">
+          <div class="form-group">
+            <label>Tip (%)</label>
+            <input type="number" id="bill-tip" value="0" min="0" max="100">
+          </div>
+          <div class="form-group">
+            <label>Termasuk Tax? (%)</label>
+            <input type="number" id="bill-tax" value="0" min="0" max="100">
+          </div>
+        </div>
+        <button class="btn btn-primary" onclick="calculateBillSplit()" style="width:100%;margin-top:1rem;">Kira</button>
+        <div id="bill-result" class="calc-result" style="margin-top:1rem;"></div>
+      </div>
+
+      <!-- Loan Calculator -->
+      <div class="card">
+        <h3 class="section-title">Loan Calculator</h3>
+        <p class="sub-text">Kira bayaran bulanan loan</p>
+        <div class="form-row">
+          <div class="form-group">
+            <label>Jumlah Loan (RM)</label>
+            <input type="number" id="loan-calc-amount" step="0.01" placeholder="50000">
+          </div>
+          <div class="form-group">
+            <label>Interest Rate (% per tahun)</label>
+            <input type="number" id="loan-calc-rate" step="0.01" placeholder="5.0">
+          </div>
+        </div>
+        <div class="form-row">
+          <div class="form-group">
+            <label>Tempoh (Tahun)</label>
+            <input type="number" id="loan-calc-years" min="1" placeholder="5">
+          </div>
+          <div class="form-group">
+            <label>Atau Bayaran Bulanan Anda Nak (RM)</label>
+            <input type="number" id="loan-calc-monthly" step="0.01" placeholder="(Optional)">
+          </div>
+        </div>
+        <button class="btn btn-primary" onclick="calculateLoan()" style="width:100%;margin-top:1rem;">Kira</button>
+        <div id="loan-result" class="calc-result" style="margin-top:1rem;"></div>
+      </div>
+
+      <!-- Savings Goal Calculator -->
+      <div class="card">
+        <h3 class="section-title">Savings Goal</h3>
+        <p class="sub-text">Rancang matlamat simpanan</p>
+        <div class="form-row">
+          <div class="form-group">
+            <label>Sasaran Simpanan (RM)</label>
+            <input type="number" id="savings-goal" step="0.01" placeholder="10000">
+          </div>
+          <div class="form-group">
+            <label>Sudah Ada (RM)</label>
+            <input type="number" id="savings-current" step="0.01" placeholder="1000" value="0">
+          </div>
+        </div>
+        <div class="form-row">
+          <div class="form-group">
+            <label>Simpanan Bulanan (RM)</label>
+            <input type="number" id="savings-monthly" step="0.01" placeholder="500">
+          </div>
+          <div class="form-group">
+            <label>Interest (% per tahun)</label>
+            <input type="number" id="savings-interest" step="0.01" placeholder="3.0" value="0">
+          </div>
+        </div>
+        <button class="btn btn-primary" onclick="calculateSavings()" style="width:100%;margin-top:1rem;">Kira</button>
+        <div id="savings-result" class="calc-result" style="margin-top:1rem;"></div>
+      </div>
+
+      <!-- Percentage Calculator -->
+      <div class="card">
+        <h3 class="section-title">Percentage Calculator</h3>
+        <p class="sub-text">Kira peratus dengan mudah</p>
+        <div class="calc-section">
+          <h4>Apakah X% daripada Y?</h4>
+          <div class="form-row">
+            <div class="form-group">
+              <label>X (Peratus)</label>
+              <input type="number" id="pct-x" step="0.01" placeholder="20">
+            </div>
+            <div class="form-group">
+              <label>Y (Jumlah)</label>
+              <input type="number" id="pct-y" step="0.01" placeholder="1000">
+            </div>
+          </div>
+          <button class="btn btn-secondary btn-sm" onclick="calcPercentage()" style="width:100%;">Kira</button>
+          <div id="pct-result-1" class="calc-result-small" style="margin-top:0.5rem;"></div>
+        </div>
+
+        <div class="calc-section">
+          <h4>Apakah % X daripada Y?</h4>
+          <div class="form-row">
+            <div class="form-group">
+              <label>X (Bahagian)</label>
+              <input type="number" id="pct-of-x" step="0.01" placeholder="250">
+            </div>
+            <div class="form-group">
+              <label>Y (Keseluruhan)</label>
+              <input type="number" id="pct-of-y" step="0.01" placeholder="1000">
+            </div>
+          </div>
+          <button class="btn btn-secondary btn-sm" onclick="calcPercentOf()" style="width:100%;">Kira</button>
+          <div id="pct-result-2" class="calc-result-small" style="margin-top:0.5rem;"></div>
+        </div>
+
+        <div class="calc-section">
+          <h4>Perubahan Peratus</h4>
+          <div class="form-row">
+            <div class="form-group">
+              <label>Dari</label>
+              <input type="number" id="pct-from" step="0.01" placeholder="100">
+            </div>
+            <div class="form-group">
+              <label>Ke</label>
+              <input type="number" id="pct-to" step="0.01" placeholder="150">
+            </div>
+          </div>
+          <button class="btn btn-secondary btn-sm" onclick="calcPercentChange()" style="width:100%;">Kira</button>
+          <div id="pct-result-3" class="calc-result-small" style="margin-top:0.5rem;"></div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Reporting Tab -->
+    <section class="tab-content" id="tab-reporting">
+      <div class="card">
+        <div class="card-head">
+          <h2>📑 Reporting Dashboard</h2>
+          <div class="report-controls">
+            <input type="date" id="report-start-date" class="form-control-inline">
+            <input type="date" id="report-end-date" class="form-control-inline">
+            <button class="btn btn-primary" onclick="generateReport()">Generate</button>
+          </div>
+        </div>
+        <p class="sub-text">Laporan kewangan komprehensif untuk dikongsi</p>
+      </div>
+
+      <!-- Summary Stats -->
+      <div class="report-summary-grid">
+        <div class="summary-card">
+          <span class="summary-label">Total Income</span>
+          <span class="summary-value income" id="report-total-income">RM 0.00</span>
+        </div>
+        <div class="summary-card">
+          <span class="summary-label">Total Expenses</span>
+          <span class="summary-value expense" id="report-total-expense">RM 0.00</span>
+        </div>
+        <div class="summary-card">
+          <span class="summary-label">Net Balance</span>
+          <span class="summary-value" id="report-net-balance">RM 0.00</span>
+        </div>
+        <div class="summary-card">
+          <span class="summary-label">Transactions</span>
+          <span class="summary-value" id="report-total-count">0</span>
+        </div>
+      </div>
+
+      <!-- Charts -->
+      <div class="report-charts-grid">
+        <div class="card">
+          <h3 class="section-title">Expenses by Category</h3>
+          <canvas id="report-category-chart" style="max-height: 300px;"></canvas>
+        </div>
+        <div class="card">
+          <h3 class="section-title">Monthly Trends</h3>
+          <canvas id="report-trend-chart" style="max-height: 300px;"></canvas>
+        </div>
+      </div>
+
+      <!-- Top Expenses -->
+      <div class="card">
+        <h3 class="section-title">Top 10 Expenses</h3>
+        <div class="table-wrap">
+          <table class="report-table">
+            <thead>
+              <tr>
+                <th>Date</th>
+                <th>Description</th>
+                <th>Category</th>
+                <th>Account</th>
+                <th>Amount</th>
+              </tr>
+            </thead>
+            <tbody id="report-top-expenses">
+              <tr><td colspan="5" class="empty-state">Tiada data dalam tempoh ini</td></tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+
+      <!-- All Transactions -->
+      <div class="card">
+        <div class="card-head">
+          <h3 class="section-title">All Transactions</h3>
+          <div class="report-actions">
+            <button class="btn btn-secondary" onclick="exportReportCSV()">📥 Export CSV</button>
+            <button class="btn btn-secondary" onclick="printReport()">🖨️ Print</button>
+          </div>
+        </div>
+        <div class="table-wrap">
+          <table class="report-table">
+            <thead>
+              <tr>
+                <th>Date</th>
+                <th>Type</th>
+                <th>Category</th>
+                <th>Description</th>
+                <th>Account</th>
+                <th>Amount</th>
+              </tr>
+            </thead>
+            <tbody id="report-all-transactions">
+              <tr><td colspan="6" class="empty-state">Tiada data dalam tempoh ini</td></tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </section>
+  </div>
+
+  <div class="modal" id="import-modal">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h2>Import CSV</h2>
+        <button class="modal-close" data-close="import-modal">&times;</button>
+      </div>
+      <div class="modal-body">
+        <p class="sub-text">Muat naik transaksi dari bank statement anda. CSV mestilah mengandungi header: <code>date, type, category, amount, description</code></p>
+        <div class="form-group">
+          <label>Pilih fail CSV</label>
+          <input type="file" id="csv-file" accept=".csv" class="file-input">
+        </div>
+        <div class="form-group">
+          <label>Format tarikh</label>
+          <select id="csv-date-format">
+            <option value="YYYY-MM-DD">YYYY-MM-DD</option>
+            <option value="DD/MM/YYYY">DD/MM/YYYY</option>
+            <option value="MM/DD/YYYY">MM/DD/YYYY</option>
+          </select>
+        </div>
+        <div id="csv-preview" style="display:none;">
+          <h3>Preview</h3>
+          <div class="table-wrap">
+            <table>
+              <thead><tr><th>Tarikh</th><th>Jenis</th><th>Kat.</th><th>Jumlah</th></tr></thead>
+              <tbody id="csv-preview-body"></tbody>
+            </table>
+          </div>
+          <p class="sub-text" id="csv-count"></p>
+        </div>
+      </div>
+      <div class="modal-footer">
+        <button class="btn btn-ghost" data-close="import-modal">Batal</button>
+        <button class="btn btn-primary" id="btn-confirm-import" disabled>Import</button>
+      </div>
+    </div>
+  </div>
+
+  <div class="modal" id="recurring-modal">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h2 id="recurring-modal-title">Tambah Recurring</h2>
+        <button class="modal-close" data-close="recurring-modal">&times;</button>
+      </div>
+      <div class="modal-body">
+        <form id="recurring-form">
+          <input type="hidden" id="recurring-id" value="">
+          <div class="form-group">
+            <label for="recurring-name">Nama</label>
+            <input type="text" id="recurring-name" placeholder="Netflix, Unifi, Sewa..." required>
+          </div>
+          <div class="form-row">
+            <div class="form-group">
+              <label for="recurring-category">Kategori</label>
+              <select id="recurring-category" required></select>
+            </div>
+            <div class="form-group">
+              <label for="recurring-amount">Jumlah (RM)</label>
+              <input type="text" id="recurring-amount" inputmode="numeric" min="0" required>
+            </div>
+          </div>
+          <div class="form-row">
+            <div class="form-group">
+              <label for="recurring-day">Tarikh bulanan</label>
+              <input type="number" id="recurring-day" min="1" max="31" value="1" required>
+            </div>
+            <div class="form-group">
+              <label for="recurring-status">Status</label>
+              <select id="recurring-status">
+                <option value="active">Aktif</option>
+                <option value="paused">Paused</option>
+              </select>
+            </div>
+          </div>
+        </form>
+      </div>
+      <div class="modal-footer">
+        <button class="btn btn-danger" id="btn-delete-recurring" style="display:none;">Padam</button>
+        <button class="btn btn-ghost" data-close="recurring-modal">Batal</button>
+        <button class="btn btn-primary" id="btn-save-recurring">Simpan</button>
+      </div>
+    </div>
+  </div>
+
+  <div class="modal" id="loan-modal">
+    <div class="modal-content modal-large">
+      <div class="modal-header">
+        <h2 id="loan-modal-title">Tambah Loan</h2>
+        <button class="modal-close" data-close="loan-modal">&times;</button>
+      </div>
+      <div class="modal-body">
+        <form id="loan-form">
+          <input type="hidden" id="loan-id" value="">
+          <div class="form-group">
+            <label for="loan-name">Nama Loan</label>
+            <input type="text" id="loan-name" placeholder="Contoh: PTPTN, Loan Kereta, Loan Rumah..." required>
+          </div>
+          <div class="form-row">
+            <div class="form-group">
+              <label for="loan-type">Jenis Loan</label>
+              <select id="loan-type" required>
+                <option value="PTPTN">PTPTN</option>
+                <option value="Kereta">Loan Kereta</option>
+                <option value="Rumah">Loan Rumah</option>
+                <option value="Peribadi">Loan Peribadi</option>
+                <option value="Pendidikan">Loan Pendidikan</option>
+                <option value="Kad Kredit">Kad Kredit</option>
+                <option value="Lain-lain">Lain-lain</option>
+              </select>
+            </div>
+            <div class="form-group">
+              <label for="loan-amount">Jumlah Asal (RM)</label>
+              <input type="text" id="loan-amount" inputmode="numeric" min="0" placeholder="50000" required>
+            </div>
+          </div>
+          <div class="form-row">
+            <div class="form-group">
+              <label for="loan-balance">Baki Semasa (RM)</label>
+              <input type="number" id="loan-balance" step="0.01" min="0" required>
+            </div>
+            <div class="form-group">
+              <label for="loan-rate">Kadar Faedah (%)</label>
+              <input type="number" id="loan-rate" step="0.01" min="0" value="0">
+            </div>
+          </div>
+          <div class="form-row">
+            <div class="form-group">
+              <label for="loan-monthly">Bayaran Bulanan (RM)</label>
+              <input type="number" id="loan-monthly" step="0.01" min="0" required>
+            </div>
+            <div class="form-group">
+              <label for="loan-start">Tarikh Mula</label>
+              <input type="date" id="loan-start" required>
+            </div>
+          </div>
+          <div class="form-group">
+            <label for="loan-notes">Nota (optional)</label>
+            <input type="text" id="loan-notes" placeholder="Nota tambahan...">
+          </div>
+        </form>
+      </div>
+      <div class="modal-footer">
+        <button class="btn btn-danger" id="btn-delete-loan" style="display:none;">Padam</button>
+        <button class="btn btn-ghost" data-close="loan-modal">Batal</button>
+        <button class="btn btn-primary" id="btn-save-loan">Simpan</button>
+      </div>
+    </div>
+  </div>
+
+  <div class="modal" id="payslip-modal">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h2>Upload Slip Gaji</h2>
+        <button class="modal-close" data-close="payslip-modal">&times;</button>
+      </div>
+      <div class="modal-body">
+        <form id="payslip-form">
+          <div class="form-row">
+            <div class="form-group">
+              <label for="payslip-month">Bulan</label>
+              <input type="month" id="payslip-month" required>
+            </div>
+            <div class="form-group">
+              <label for="payslip-salary-input">Gaji Pokok (RM)</label>
+              <input type="number" id="payslip-salary-input" step="0.01" min="0" required>
+            </div>
+          </div>
+          <div class="form-group">
+            <label for="payslip-file">Pilih Fail (PDF atau Image)</label>
+            <input type="file" id="payslip-file" accept=".pdf,image/*" class="file-input" required>
+          </div>
+          <div class="form-group">
+            <label for="payslip-notes">Nota (optional)</label>
+            <input type="text" id="payslip-notes" placeholder="Contoh: Gaji + Bonus">
+          </div>
+        </form>
+      </div>
+      <div class="modal-footer">
+        <button class="btn btn-ghost" data-close="payslip-modal">Batal</button>
+        <button class="btn btn-primary" id="btn-save-payslip">Upload</button>
+      </div>
+    </div>
+  </div>
+
+  <div class="modal" id="account-modal">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h2 id="account-modal-title">Tambah Akaun</h2>
+        <button class="modal-close" data-close="account-modal">&times;</button>
+      </div>
+      <form id="account-form">
+        <div class="modal-body">
+          <input type="hidden" id="account-id">
+          <input type="hidden" id="account-type">
+          <div class="form-group">
+            <label for="account-name">Nama</label>
+            <input type="text" id="account-name" class="form-control" required>
+          </div>
+          <div class="form-group">
+            <label for="account-balance-input">Baki (RM)</label>
+            <input type="number" id="account-balance-input" class="form-control" step="0.01" required>
+          </div>
+          <div class="form-group" id="account-limit-group" style="display:none;">
+            <label for="account-limit">Limit (RM)</label>
+            <input type="number" id="account-limit" class="form-control" step="0.01">
+          </div>
+          <div id="bank-fields-group" style="display:none;">
+            <div class="form-group">
+              <label for="account-bank-name">Nama Bank</label>
+              <select id="account-bank-name" class="form-control">
+                <option value="Maybank">Maybank</option>
+                <option value="CIMB Bank">CIMB Bank</option>
+                <option value="Public Bank">Public Bank</option>
+                <option value="RHB Bank">RHB Bank</option>
+                <option value="Hong Leong Bank">Hong Leong Bank</option>
+                <option value="AmBank">AmBank</option>
+                <option value="Bank Islam">Bank Islam</option>
+                <option value="Bank Muamalat">Bank Muamalat</option>
+                <option value="Alliance Bank">Alliance Bank</option>
+                <option value="Affin Bank">Affin Bank</option>
+                <option value="Bank Rakyat">Bank Rakyat</option>
+                <option value="OCBC Bank">OCBC Bank</option>
+                <option value="HSBC Bank">HSBC Bank</option>
+                <option value="UOB Bank">UOB Bank</option>
+                <option value="Standard Chartered">Standard Chartered</option>
+                <option value="Lain-lain">Lain-lain</option>
+              </select>
+            </div>
+            <div class="form-group">
+              <label for="account-number">No. Akaun (optional)</label>
+              <input type="text" id="account-number" class="form-control" placeholder="****1234">
+            </div>
+            <div class="form-group">
+              <label for="account-bank-type">Jenis Akaun</label>
+              <select id="account-bank-type" class="form-control">
+                <option value="Savings">Simpanan (Savings)</option>
+                <option value="Current">Semasa (Current Account)</option>
+                <option value="Fixed Deposit">Deposit Tetap</option>
+              </select>
+            </div>
+          </div>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-ghost" data-close="account-modal">Batal</button>
+          <button type="submit" class="btn btn-primary">Simpan</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <div class="modal" id="recurring-payments-modal">
+    <div class="modal-content modal-large">
+      <div class="modal-header">
+        <h2 id="recurring-payments-modal-title">Rekod Pembayaran</h2>
+        <button class="modal-close" data-close="recurring-payments-modal">&times;</button>
+      </div>
+      <div class="modal-body">
+        <div class="recurring-payment-summary">
+          <div class="summary-row">
+            <div class="summary-label">Jumlah Bayaran</div>
+            <div class="summary-value" id="payment-total">RM 0.00</div>
+          </div>
+          <div class="summary-row">
+            <div class="summary-label">Baki Belum Bayar</div>
+            <div class="summary-value" id="payment-balance">RM 0.00</div>
+          </div>
+        </div>
+
+        <form id="payment-form" class="payment-form">
+          <input type="hidden" id="payment-recurring-id">
+          <div class="form-row">
+            <div class="form-group">
+              <label for="payment-amount">Jumlah (RM)</label>
+              <input type="number" id="payment-amount" class="form-control" step="0.01" required>
+            </div>
+            <div class="form-group">
+              <label for="payment-account">Akaun</label>
+              <select id="payment-account" class="form-control" required>
+                <option value="cash">Tunai</option>
+              </select>
+            </div>
+          </div>
+          <div class="form-row">
+            <div class="form-group">
+              <label for="payment-date">Tarikh</label>
+              <input type="date" id="payment-date" class="form-control" required>
+            </div>
+            <div class="form-group">
+              <label for="payment-note">Nota (optional)</label>
+              <input type="text" id="payment-note" class="form-control" placeholder="Contoh: Top-up guna app">
+            </div>
+          </div>
+          <button type="submit" class="btn btn-primary btn-full">+ Tambah Pembayaran</button>
+        </form>
+
+        <div class="payments-list">
+          <h3>Perincian Pembayaran</h3>
+          <div id="payments-container"></div>
+        </div>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-ghost" data-close="recurring-payments-modal">Tutup</button>
+        <button type="button" class="btn btn-success" id="btn-mark-paid" style="display:none;">✅ Selesai</button>
+      </div>
+    </div>
+  </div>
+
+  <div class="modal" id="settings-modal">
+    <div class="modal-content modal-large">
+      <div class="modal-header">
+        <h2>Tetapan</h2>
+        <button class="modal-close" data-close="settings-modal">&times;</button>
+      </div>
+      <div class="modal-body">
+        <div class="form-group">
+          <label for="config-api-url">Google Apps Script Web App URL</label>
+          <input type="url" id="config-api-url" placeholder="https://script.google.com/macros/s/...">
+          <small>Paste URL dari Google Apps Script deployment anda.</small>
+        </div>
+        <div class="form-group">
+          <label>AI Auto-Category</label>
+          <label class="toggle">
+            <input type="checkbox" id="toggle-ai" checked>
+            <span class="toggle-slider"></span>
+          </label>
+          <small>Suggest kategori secara automatik berdasarkan catatan.</small>
+        </div>
+        <h3>Budget Bulanan Mengikut Kategori</h3>
+        <div id="budget-settings"></div>
+      </div>
+      <div class="modal-footer">
+        <button class="btn btn-ghost" data-close="settings-modal">Batal</button>
+        <button class="btn btn-primary" id="btn-save-settings">Simpan Tetapan</button>
+      </div>
+    </div>
+  </div>
+
+  <div class="modal" id="setup-modal">
+    <div class="modal-content modal-large">
+      <div class="modal-header">
+        <h2>Selamat Datang!</h2>
+      </div>
+      <div class="modal-body">
+        <p>Expense Tracker akan menyimpan transaksi anda di Google Sheets. Masukkan Apps Script Web App URL untuk bermula.</p>
+        <div class="form-group">
+          <label for="setup-api-url">Apps Script Web App URL</label>
+          <input type="url" id="setup-api-url" placeholder="https://script.google.com/macros/s/...">
+        </div>
+        <p class="sub-text">Tiada akaun Google? Anda boleh guna app ini secara demo (data disimpan dalam browser sahaja).</p>
+      </div>
+      <div class="modal-footer">
+        <button class="btn btn-ghost" id="btn-skip-setup">Demo Sahaja</button>
+        <button class="btn btn-primary" id="btn-setup-save">Sambung</button>
+      </div>
+    </div>
+  </div>
+
+  <div class="toast-container" id="toast-container"></div>
+
+  <script src="app.js"></script>
+</body>
+</html>
